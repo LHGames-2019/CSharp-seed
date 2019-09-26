@@ -2,128 +2,65 @@
 
 namespace LHGames.Helper
 {
-    public enum ActionTypes
+    public enum Direction { Up = 0, Right = 1, Down = 2, Left = 3, Invalid = 4 };
+
+    public interface IPlayer
     {
-        DefaultAction,
-        MoveAction,
-        AttackAction,
-        CollectAction,
-        UpgradeAction,
-        StealAction,
-        PurchaseAction,
-        HealAction
+        int TeamNumber { get; set; }
+        Point Position { get; set; }
+        int SizeOfTail { get; set; }
+        int SizeOfBody { get; set; }
     }
 
-    public enum UpgradeType
+    public class HostPlayer : IPlayer
     {
-        CarryingCapacity,
-        AttackPower,
-        Defence,
-        MaximumHealth,
-        CollectingSpeed
+        public int TeamNumber { get; set; }
+        public Point Position { get; set; }
+        public int SizeOfTail { get; set; }
+        public int SizeOfBody { get; set; }
+        public int MaxMovement { get; set; }
+        public int MovementLeft { get; set; }
+        public Direction LastMove { get; set; }
     }
 
-    public enum PurchasableItem
+    public class OtherPlayer : IPlayer
     {
-        Sword,
-        Shield,
-        Backpack,
-        Pickaxe,
-        HealthPotion,
+        public int TeamNumber { get; set; }
+        public Point Position { get; set; }
+        public int SizeOfTail { get; set; }
+        public int SizeOfBody { get; set; }
     }
 
-    // DO NO REORDER THIS, make sure it matches the typescript tile enum.
-    public enum TileContent
+    public class GameInfo
     {
-        Empty,
-        Wall,
-        House,
-        Lava,
-        Resource,
-        Shop,
-        Player
-    }
-
-    public struct GameInfo
-    {
-        public Player Player;
-        public string CustomSerializedMap;
-        public List<string> Leaderboard;
-        public List<Player> OtherPlayers;
-        public int xMin;
-        public int yMin;
-        public bool WallsAreBreakable;
+        public string[] Map { get; set; }
+        public HostPlayer Self { get; set; }
+        public List<OtherPlayer> Others { get; set; }
     }
 
     public class Tile
     {
-        public TileContent TileType { get; private set; }
-        public Point Position { get; private set; }
-
-        public Tile(byte content, int x, int y)
-        {
-            TileType = (TileContent)content;
-            Position = new Point(x, y);
-        }
-        public override string ToString()
-        {
-            return TileType.ToString();
-        }
+        public int Color { get; set; }
+        public int Tail { get; set; }
+        public ISet<int> Heads { get; }
+        public bool IsBorder { get; }
+        public IList<bool> IsAlreadyChecked { get; }
+        public Point Position { get; }
     }
 
-    public class ResourceTile : Tile
+    public class Point
     {
-        public int AmountLeft { get; private set; }
-        public double Density { get; private set; }
-
-        public ResourceTile(byte content, int x, int y, int amountLeft, double density)
-            : base(content, x, y)
-        {
-            AmountLeft = amountLeft;
-            Density = density;
-        }
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 
-
-    public interface IPlayer
+    public class Map
     {
-        int Health { get; }
-        int MaxHealth { get; }
-        int CarriedResources { get; }
-        int CarryingCapacity { get; }
-        double CollectingSpeed { get; }
-        int TotalResources { get; }
-        int AttackPower { get; }
-        int Defence { get; }
-        Point Position { get; }
-        Point HouseLocation { get; }
-        PurchasableItem[] CarriedItems { get; }
-        int Score { get; }
-        string Name { get; }
-
-        int GetUpgradeLevel(UpgradeType type);
+        public int Width { get; }
+        public int Height { get; }
+        public int NTiles { get; }
+        public int NTeam { get; }
+        public List<List<Tile>> Grid { get; set; }
     }
-
-    public class Player : IPlayer
-    {
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
-        public int CarriedResources { get; set; }
-        public int CarryingCapacity { get; set; }
-        public double CollectingSpeed { get; set; }
-        public int TotalResources { get; set; }
-        public int AttackPower { get; set; }
-        public int Defence { get; set; }
-        public Point Position { get; set; }
-        public Point HouseLocation { get; set; }
-        public PurchasableItem[] CarriedItems { get; set; }
-        public int[] UpgradeLevels { get; set; }
-        public int Score { get; set; }
-        public string Name { get; set; }
-
-        public int GetUpgradeLevel(UpgradeType type)
-        {
-            return UpgradeLevels[(int)type];
-        }
-    }
+    
 }

@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using StarterProject.Web.Api;
 
 namespace LHGames
 {
@@ -8,15 +9,24 @@ namespace LHGames
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseUrls("http://*:3000")
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
 
-            host.Run();
+            try
+            {
+                DotNetEnv.Env.Load();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("No .env file was found, mode offline activated");
+            }
+
+            BuildWebHost(args).Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args) => WebHost.CreateDefaultBuilder(args)
+                        .UseStartup<Startup>()
+                        .UseIISIntegration()
+                        .UseUrls($"http://*:{Environment.GetEnvironmentVariable("PORT") ?? "3000"}")
+                        .UseKestrel()
+                        .Build();
     }
 }
