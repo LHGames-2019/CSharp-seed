@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace LHGames.Services
 {
+    /// <summary>
+    /// !!! DO NOT EDIT !!!
+    /// </summary>
     public class LHApiSignalrService : ISignalrService
     {
         private readonly GameServerSignalrService _gameserverSignalrService;
@@ -35,13 +38,14 @@ namespace LHGames.Services
                 options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
             })
             .Build();
+
             try
             {
                 await Connection.StartAsync();
 
-            } catch (System.Net.Http.HttpRequestException)
+            } catch (System.Net.Http.HttpRequestException e)
             {
-                await _gameserverSignalrService.ConnectAsync(_appSettings.Value.GS_URL);
+                Console.WriteLine($"{e.Message}: When trying to connect to the LHApi");
             }
 
             InitiateCallbacks();
@@ -49,10 +53,11 @@ namespace LHGames.Services
 
         public void InitiateCallbacks()
         {
+            Connection.On(Constants.SignalRFunctionNames.AssignTeamId, (string teamId) => _gameserverSignalrService.TeamId = teamId);
+
             Connection.On(Constants.SignalRFunctionNames.AssignGameServerUriToGameId, 
                         async (string gameserverUri) => await _gameserverSignalrService.ConnectAsync(gameserverUri));
 
-            Connection.On(Constants.SignalRFunctionNames.AssignTeamId, (string teamId) => _gameserverSignalrService.TeamId = teamId);
         }
     }
 }

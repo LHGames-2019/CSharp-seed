@@ -15,6 +15,9 @@ using System.Threading;
 
 namespace LHGames.Services
 {
+    /// <summary>
+    /// !!! DO NOT EDIT !!!
+    /// </summary>
     public class GameServerSignalrService : ISignalrService
     {
         private readonly IOptions<AppSettings> _appSettings;
@@ -43,6 +46,9 @@ namespace LHGames.Services
             await Connection.StartAsync().ContinueWith(res =>
             {
                 Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, TeamId);
+                string[] map = { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "C--", "C--", "C--", "C--", "C--", "D--", "D--", "D--", "-d-", "-d-", "", "", "", "", "", "", "C--", "C--", "C--", "C--", "C--", "D--", "D--", "D--", "D--", "--4", "", "", "", "", "", "", "", "", "", "-c-", "-c-", "", "", "D--", "D--", "", "", "", "", "", "", "", "", "", "--3", "-c-", "-c-", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "A--", "A--", "", "", "", "", "", "", "", "", "", "", "", "", "", "A--", "A--", "A-1", "", "", "", "", "", "", "", "", "", "", "", "", "", "A--", "A--", "A--", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "A--", "A--", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+                RequestExecuteTurn(map, 16, 5, 4, Helper.Direction.Down, 3);
+
             });
 
             InitiateCallbacks();
@@ -72,7 +78,7 @@ namespace LHGames.Services
                         => RequestExecuteTurn(currentMap, dimension, maxMovement, movementLeft, lastMove, teamNumberi));
         }
 
-        public void RequestExecuteTurn( string[] currentMap, int dimension, int maxMovement, int movementLeft,  Direction lastMove, int teamNumber)
+        public async void RequestExecuteTurn( string[] currentMap, int dimension, int maxMovement, int movementLeft,  Direction lastMove, int teamNumber)
         {
 
             GameInfo gameInfo = new GameInfo() {
@@ -103,40 +109,19 @@ namespace LHGames.Services
                 });
             }
 
-            CancellationTokenSource cancellationToken = new CancellationTokenSource();
-            Task<Direction> task = Task.Run(() => { return PlayerBot.ExecuteTurn(gameInfo); }, cancellationToken.Token);
-
             try
             {
-                Direction nextMove = TimeoutAfter(task, 1000, cancellationToken);
+                Direction nextMove = Task<Direction>.Run(() => { return PlayerBot.ExecuteTurn(gameInfo); }).Result; 
                 HelperFunctions.Print2DMap(HelperFunctions.Get2DMap(currentMap, dimension));
-                Console.WriteLine($"{HelperFunctions.GetPositionByTeamNumber(currentMap, dimension, teamNumber).X} : {HelperFunctions.GetPositionByTeamNumber(currentMap, dimension, teamNumber).Y}");
-                Console.WriteLine(HelperFunctions.GetSizeOfBodyByTeamNumber(currentMap, teamNumber));
-                Console.WriteLine(HelperFunctions.GetSizeOfTailByTeamNumber(currentMap, teamNumber));
-                Console.WriteLine(lastMove);
-                Console.WriteLine(nextMove);
-                Connection.InvokeAsync(Constants.SignalRFunctionNames.ReturnExecuteTurn, nextMove);
-            } catch(Exception e)
+                Console.WriteLine($"___________ Turn Executed with move: {nextMove} ___________");
+                await Connection.InvokeAsync(Constants.SignalRFunctionNames.ReturnExecuteTurn, nextMove);
+            }
+            catch (Exception e)
             {
-                //cancellationToken.Cancel();    
-                var b = task.IsCanceled;
                 Console.WriteLine(e.Message);
             }
-            finally
-            {
-                cancellationToken.Dispose();
-            }
 
         }
 
-        private static T TimeoutAfter<T>(Task<T> task, int millisecondsTimeout, CancellationTokenSource cancellationToken)
-        {
-            bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(millisecondsTimeout));
-            if (isCompletedSuccessfully)
-                return task.Result;
-            else
-                cancellationToken.Cancel();
-                throw new TimeoutException();
-        }
     }
 }

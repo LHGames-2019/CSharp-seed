@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace LHGames
 {
+    /// <summary>
+    /// !!! DO NOT EDIT !!!
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)

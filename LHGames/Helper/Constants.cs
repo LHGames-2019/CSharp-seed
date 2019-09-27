@@ -7,6 +7,9 @@ namespace LHGames.Helpers
 {
     abstract public class Constants
     {
+        /// <summary>
+        /// !!! DO NOT EDIT !!!
+        /// </summary>
         public class SignalRFunctionNames
         {
             public static string AssignGameServerUriToGameId = "AssignGameServerUriToGameId";

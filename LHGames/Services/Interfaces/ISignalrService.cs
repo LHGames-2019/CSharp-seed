@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LHGames.Services.Interfaces
 {
+    /// <summary>
+    /// !!! DO NOT EDIT !!!
+    /// </summary>
     public interface ISignalrService
     {
         HubConnection Connection { get; set; }

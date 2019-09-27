@@ -13,20 +13,8 @@ namespace LHGames.Bot
         /// <summary>
         /// Implement your bot here.
         /// </summary>
-        public Direction ExecuteTurn(GameInfo gameInfo)
+        public async Task<Direction> ExecuteTurn(GameInfo gameInfo)
         {
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Console.WriteLine("Sleep for 1 second!");
-            //    Thread.Sleep(1000);
-            //}
-
-            while (true)
-            {
-                Console.WriteLine("Sleeping");
-            }
-
             return Direction.Up;
         }
     }
