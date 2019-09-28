@@ -13,7 +13,7 @@ namespace LHGames.Bot
         /// <summary>
         /// Implement your bot here.
         /// </summary>
-        public async Task<Direction> ExecuteTurn(GameInfo gameInfo)
+        public Direction ExecuteTurn(GameInfo gameInfo)
         {
             return Direction.Up;
         }
