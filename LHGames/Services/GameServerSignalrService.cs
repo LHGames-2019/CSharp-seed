@@ -99,7 +99,7 @@ namespace LHGames.Services
             {
                 gameInfo.Others.Add(new OtherPlayer()
                 {
-                    TeamNumber = teamNumber,
+                    TeamNumber = id,
                     Position = HelperFunctions.GetPositionByTeamNumber(currentMap, dimension, id),
                     SizeOfBody = HelperFunctions.GetSizeOfBodyByTeamNumber(currentMap, id),
                     SizeOfTail = HelperFunctions.GetSizeOfTailByTeamNumber(currentMap, id)
