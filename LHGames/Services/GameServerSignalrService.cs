@@ -73,6 +73,12 @@ namespace LHGames.Services
             Connection.On(Constants.SignalRFunctionNames.RequestExecuteTurn,
                         (string[] currentMap, int dimension, int maxMovement, int movementLeft, Direction lastMove, int teamNumberi) 
                         => RequestExecuteTurn(currentMap, dimension, maxMovement, movementLeft, lastMove, teamNumberi));
+            Connection.On(Constants.SignalRFunctionNames.ReceiveFinalMap, (string[] currentMap) => { ReceiveFinalMap(currentMap); });
+        }
+
+        public async void ReceiveFinalMap(string[] currentMap)
+        {
+            await Connection.StopAsync();
         }
 
         public async void RequestExecuteTurn( string[] currentMap, int dimension, int maxMovement, int movementLeft,  Direction lastMove, int teamNumber)

@@ -21,6 +21,8 @@ namespace LHGames.Helpers
             public static string ReturnExecuteTurn = "ReturnExecuteTurn";
 
             public static string Register = "Register";
+
+            public static string ReceiveFinalMap = "ReceiveFinalMap";
         }
     }
 }
