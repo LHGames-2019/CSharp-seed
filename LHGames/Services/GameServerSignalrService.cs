@@ -26,8 +26,6 @@ namespace LHGames.Services
 
         static readonly PlayerBot PlayerBot = new PlayerBot();
 
-        public string TeamId { get; set; } = "";
-
         public GameServerSignalrService(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings;
@@ -45,7 +43,7 @@ namespace LHGames.Services
 
             await Connection.StartAsync().ContinueWith(res =>
             {
-                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, TeamId);
+                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAN_ID") ?? "");
             });
 
             InitiateCallbacks();
@@ -62,7 +60,7 @@ namespace LHGames.Services
 
             await Connection.StartAsync().ContinueWith(res =>
             {
-                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, TeamId);
+                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAN_ID") ?? "");
             });
 
             InitiateCallbacks();

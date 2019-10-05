@@ -41,7 +41,14 @@ namespace LHGames.Services
 
             try
             {
-                await Connection.StartAsync();
+                await Connection.StartAsync().ContinueWith(res => {
+                    if(Connection.State == HubConnectionState.Connected)
+                    {
+                        Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, 
+                            Environment.GetEnvironmentVariable("TEAN_ID") ?? "", 
+                            Environment.GetEnvironmentVariable("GAME_ID") ?? "");
+                    }
+                });
 
             } catch (System.Net.Http.HttpRequestException e)
             {
@@ -53,8 +60,6 @@ namespace LHGames.Services
 
         public void InitiateCallbacks()
         {
-            Connection.On(Constants.SignalRFunctionNames.AssignTeamId, (string teamId) => _gameserverSignalrService.TeamId = teamId);
-
             Connection.On(Constants.SignalRFunctionNames.AssignGameServerUriToGameId, 
                         async (string gameserverUri) => await _gameserverSignalrService.ConnectAsync(gameserverUri));
 
