@@ -45,7 +45,7 @@ namespace LHGames.Services
                     if(Connection.State == HubConnectionState.Connected)
                     {
                         Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, 
-                            Environment.GetEnvironmentVariable("TEAN_ID") ?? "", 
+                            Environment.GetEnvironmentVariable("TEAM_ID") ?? "", 
                             Environment.GetEnvironmentVariable("GAME_ID") ?? "");
                     }
                 });

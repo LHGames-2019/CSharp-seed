@@ -43,7 +43,7 @@ namespace LHGames.Services
 
             await Connection.StartAsync().ContinueWith(res =>
             {
-                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAN_ID") ?? "");
+                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAM_ID") ?? "");
             });
 
             InitiateCallbacks();
@@ -60,7 +60,7 @@ namespace LHGames.Services
 
             await Connection.StartAsync().ContinueWith(res =>
             {
-                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAN_ID") ?? "");
+                Connection.InvokeAsync(Constants.SignalRFunctionNames.Register, Environment.GetEnvironmentVariable("TEAM_ID") ?? "");
             });
 
             InitiateCallbacks();
